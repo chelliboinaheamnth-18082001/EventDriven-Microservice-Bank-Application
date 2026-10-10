@@ -39,8 +39,6 @@ public class GatewayserverApplication {
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://CARDS")).build();
 
-
     }
-
 
 }

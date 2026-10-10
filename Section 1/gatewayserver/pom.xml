@@ -79,6 +79,13 @@
             <scope>test</scope>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.axonframework</groupId>-->
+<!--            <artifactId>axon-spring-boot-starter</artifactId>-->
+<!--            <version>4.13.2</version> &lt;!&ndash; latest stable &ndash;&gt;-->
+<!--        </dependency>-->
+
+
     </dependencies>
 
     <build>
