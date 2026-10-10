@@ -1,5 +1,6 @@
 package com.HBank.cards.mapper;
 
+import com.HBank.cards.CQRS_EventSourcing.Command.event.CardUpdatedEvent;
 import com.HBank.cards.dto.CardsDto;
 import com.HBank.cards.entity.Cards;
 
@@ -22,6 +23,14 @@ public class CardsMapper {
         cards.setAvailableAmount(cardsDto.getAvailableAmount());
         cards.setAmountUsed(cardsDto.getAmountUsed());
         return cards;
+    }
+
+    public static Cards mapEventToCard(CardUpdatedEvent event, Cards card) {
+        card.setCardType(event.getCardType());
+        card.setTotalLimit(event.getTotalLimit());
+        card.setAmountUsed(event.getAmountUsed());
+        card.setAvailableAmount(event.getAvailableAmount());
+        return card;
     }
 
 }

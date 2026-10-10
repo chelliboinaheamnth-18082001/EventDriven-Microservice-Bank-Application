@@ -1,15 +1,17 @@
 package com.HBank.accounts.service;
 
 
+import com.HBank.accounts.CQRS_EventSourcing.Command.Event.AccountUpdatedEvent;
 import com.HBank.accounts.dto.AccountsDto;
+import com.HBank.accounts.entity.Accounts;
 
 public interface IAccountsService {
 
     /**
      *
-     * @param mobileNumber - Input Mobile Number
+     * @param account - Accounts Object
      */
-    void createAccount(String mobileNumber);
+    void createAccount(Accounts account);
 
     /**
      *
@@ -20,10 +22,10 @@ public interface IAccountsService {
 
     /**
      *
-     * @param accountsDto - AccountsDto Object
+     * @param event - AccountUpdatedEvent Object
      * @return boolean indicating if the update of Account details is successful or not
      */
-    boolean updateAccount(AccountsDto accountsDto);
+    boolean updateAccount(AccountUpdatedEvent event);
 
     /**
      *

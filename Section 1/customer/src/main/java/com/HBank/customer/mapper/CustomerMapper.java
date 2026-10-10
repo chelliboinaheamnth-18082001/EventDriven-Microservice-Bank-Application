@@ -1,5 +1,7 @@
 package com.HBank.customer.mapper;
 
+
+import com.HBank.customer.CQRS_EventSourcing.Command.Event.CustomerUpdatedEvent;
 import com.HBank.customer.dto.CustomerDto;
 import com.HBank.customer.entity.Customer;
 
@@ -22,6 +24,12 @@ public class CustomerMapper {
         if(customerDto.isActiveSw()) {
             customer.setActiveSw(customerDto.isActiveSw());
         }
+        return customer;
+    }
+
+    public static Customer mapEventToCustomer(CustomerUpdatedEvent event, Customer customer) {
+        customer.setName(event.getName());
+        customer.setEmail(event.getEmail());
         return customer;
     }
 

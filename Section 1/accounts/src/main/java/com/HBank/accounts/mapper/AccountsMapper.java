@@ -1,6 +1,7 @@
 package com.HBank.accounts.mapper;
 
 
+import com.HBank.accounts.CQRS_EventSourcing.Command.Event.AccountUpdatedEvent;
 import com.HBank.accounts.dto.AccountsDto;
 import com.HBank.accounts.entity.Accounts;
 
@@ -19,6 +20,12 @@ public class AccountsMapper {
         accounts.setAccountType(accountsDto.getAccountType());
         accounts.setBranchAddress(accountsDto.getBranchAddress());
         return accounts;
+    }
+
+    public static Accounts mapEventToAccount(AccountUpdatedEvent event, Accounts account) {
+        account.setAccountType(event.getAccountType());
+        account.setBranchAddress(event.getBranchAddress());
+        return account;
     }
 
 }

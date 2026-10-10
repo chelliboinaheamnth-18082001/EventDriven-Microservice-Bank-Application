@@ -1,5 +1,6 @@
 package com.HBank.loans.mapper;
 
+import com.HBank.loans.CQRS_EventSourcing.Command.event.LoanUpdatedEvent;
 import com.HBank.loans.dto.LoansDto;
 import com.HBank.loans.entity.Loans;
 
@@ -22,6 +23,14 @@ public class LoansMapper {
         loans.setAmountPaid(loansDto.getAmountPaid());
         loans.setOutstandingAmount(loansDto.getOutstandingAmount());
         return loans;
+    }
+
+    public static Loans mapEventToLoan(LoanUpdatedEvent event, Loans loan) {
+        loan.setLoanType(event.getLoanType());
+        loan.setTotalLoan(event.getTotalLoan());
+        loan.setAmountPaid(event.getAmountPaid());
+        loan.setOutstandingAmount(event.getOutstandingAmount());
+        return loan;
     }
 
 }

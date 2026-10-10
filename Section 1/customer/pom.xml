@@ -16,7 +16,6 @@
     <groupId>com.HBank</groupId>
     <artifactId>customer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
     <packaging>jar</packaging>
 
     <name>customer</name>
@@ -40,7 +39,7 @@
     </dependencyManagement>
 
     <dependencies>
-
+        <!-- Spring Boot starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -56,23 +55,32 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Eureka Client -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
+        <!-- H2 Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
+        <!-- Axon Framework with Spring Boot -->
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-spring-boot-starter</artifactId>
+            <version>4.13.2</version>
+        </dependency>
     </dependencies>
 
     <build>
