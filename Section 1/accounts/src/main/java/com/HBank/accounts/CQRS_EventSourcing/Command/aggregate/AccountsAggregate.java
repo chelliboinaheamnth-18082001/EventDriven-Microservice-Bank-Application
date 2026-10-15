@@ -13,6 +13,7 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
+import com.example.hbankbom.event.AccountDataChangedEvent;
 
 @Aggregate
 public class AccountsAggregate {
@@ -28,12 +29,14 @@ public class AccountsAggregate {
     public AccountsAggregate() {
     }
 
-
     @CommandHandler
     public AccountsAggregate(CreateAccountCommand createCommand) {
         AccountCreatedEvent accountCreatedEvent = new AccountCreatedEvent();
         BeanUtils.copyProperties(createCommand, accountCreatedEvent);
-        AggregateLifecycle.apply(accountCreatedEvent);
+        AccountDataChangedEvent accountDataChangedEvent = new AccountDataChangedEvent();
+        BeanUtils.copyProperties(createCommand, accountDataChangedEvent);
+        AggregateLifecycle.apply(accountCreatedEvent)
+                .andThen(() -> AggregateLifecycle.apply(accountDataChangedEvent));
     }
 
     @EventSourcingHandler
@@ -49,7 +52,10 @@ public class AccountsAggregate {
     public void handle(UpdateAccountCommand updateCommand) {
         AccountUpdatedEvent accountUpdatedEvent = new AccountUpdatedEvent();
         BeanUtils.copyProperties(updateCommand, accountUpdatedEvent);
+        AccountDataChangedEvent accountDataChangedEvent = new AccountDataChangedEvent();
+        BeanUtils.copyProperties(updateCommand, accountDataChangedEvent);
         AggregateLifecycle.apply(accountUpdatedEvent);
+        AggregateLifecycle.apply(accountDataChangedEvent);
     }
 
     @EventSourcingHandler

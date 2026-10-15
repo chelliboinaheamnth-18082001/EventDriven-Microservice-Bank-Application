@@ -7,6 +7,7 @@ import com.HBank.loans.CQRS_EventSourcing.Command.UpdateLoanCommand;
 import com.HBank.loans.CQRS_EventSourcing.Command.event.LoanCreatedEvent;
 import com.HBank.loans.CQRS_EventSourcing.Command.event.LoanDeletedEvent;
 import com.HBank.loans.CQRS_EventSourcing.Command.event.LoanUpdatedEvent;
+
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -14,7 +15,7 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
-
+import com.example.hbankbom.event.LoanDataChangedEvent;
 @Aggregate
 @Slf4j
 public class LoanAggregate {
@@ -38,7 +39,10 @@ public class LoanAggregate {
     public LoanAggregate(CreateLoanCommand createCommand) {
         LoanCreatedEvent loanCreatedEvent = new LoanCreatedEvent();
         BeanUtils.copyProperties(createCommand, loanCreatedEvent);
-        AggregateLifecycle.apply(loanCreatedEvent);
+        LoanDataChangedEvent loanDataChangedEvent = new LoanDataChangedEvent();
+        BeanUtils.copyProperties(createCommand, loanDataChangedEvent);
+        AggregateLifecycle.apply(loanCreatedEvent)
+                .andThen(() -> AggregateLifecycle.apply(loanDataChangedEvent));
     }
 
     @EventSourcingHandler
@@ -57,7 +61,10 @@ public class LoanAggregate {
     public void handle(UpdateLoanCommand updateCommand) {
         LoanUpdatedEvent loanUpdatedEvent = new LoanUpdatedEvent();
         BeanUtils.copyProperties(updateCommand, loanUpdatedEvent);
+        LoanDataChangedEvent loanDataChangedEvent = new LoanDataChangedEvent();
+        BeanUtils.copyProperties(updateCommand, loanDataChangedEvent);
         AggregateLifecycle.apply(loanUpdatedEvent);
+        AggregateLifecycle.apply(loanDataChangedEvent);
     }
 
     @EventSourcingHandler

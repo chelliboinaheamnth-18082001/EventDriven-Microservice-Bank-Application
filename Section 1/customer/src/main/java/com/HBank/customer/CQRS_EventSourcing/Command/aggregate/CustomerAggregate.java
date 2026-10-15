@@ -7,8 +7,7 @@ import com.HBank.customer.CQRS_EventSourcing.Command.Event.CustomerCreatedEvent;
 import com.HBank.customer.CQRS_EventSourcing.Command.Event.CustomerDeletedEvent;
 import com.HBank.customer.CQRS_EventSourcing.Command.Event.CustomerUpdatedEvent;
 import com.HBank.customer.CQRS_EventSourcing.Command.UpdateCustomerCommand;
-import com.HBank.customer.entity.Customer;
-import com.HBank.customer.exception.CustomerAlreadyExistsException;
+
 import com.HBank.customer.repository.CustomerRepository;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -17,9 +16,7 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.springframework.beans.BeanUtils;
-
-import java.util.Optional;
-
+import com.example.hbankbom.event.CustomerDataChangedEvent;
 @Aggregate
 public class CustomerAggregate {
 
@@ -35,16 +32,19 @@ public class CustomerAggregate {
     }
 
     @CommandHandler
-    public CustomerAggregate(CreateCustomerCommand createCustomerCommand) {
-//        Optional<Customer> optionalCustomer = customerRepository.
-//                findByMobileNumberAndActiveSw(createCustomerCommand.getMobileNumber(), true);
-//        if (optionalCustomer.isPresent()) {
-//            throw new CustomerAlreadyExistsException("Customer already registered with given mobileNumber "
-//                    + createCustomerCommand.getMobileNumber());
-//        }
+    public CustomerAggregate(CreateCustomerCommand createCustomerCommand, CustomerRepository customerRepository) {
         CustomerCreatedEvent customerCreatedEvent = new CustomerCreatedEvent();
         BeanUtils.copyProperties(createCustomerCommand, customerCreatedEvent);
-        AggregateLifecycle.apply(customerCreatedEvent);
+        CustomerDataChangedEvent customerDataChangedEvent = new CustomerDataChangedEvent();
+        BeanUtils.copyProperties(createCustomerCommand, customerDataChangedEvent);
+        System.out.println(
+                "Publishing CustomerDataChangedEvent: mobileNumber = "
+                        + customerDataChangedEvent.getMobileNumber()
+        );
+
+        AggregateLifecycle.apply(customerCreatedEvent) ;
+
+        AggregateLifecycle.apply(customerDataChangedEvent);
     }
 
     @EventSourcingHandler
@@ -57,14 +57,13 @@ public class CustomerAggregate {
     }
 
     @CommandHandler
-    public void handle(UpdateCustomerCommand updateCustomerCommand) {
-        /*List<?>   commands = eventStore.readEvents(updateCustomerCommand.getCustomerId()).asStream().toList();
-        if(commands.isEmpty()) {
-            throw new ResourceNotFoundException("Customer", "customerId", updateCustomerCommand.getCustomerId());
-        }*/
+    public void handle(UpdateCustomerCommand updateCustomerCommand, EventStore eventStore) {
         CustomerUpdatedEvent customerUpdatedEvent = new CustomerUpdatedEvent();
         BeanUtils.copyProperties(updateCustomerCommand, customerUpdatedEvent);
+        CustomerDataChangedEvent customerDataChangedEvent = new CustomerDataChangedEvent();
+        BeanUtils.copyProperties(updateCustomerCommand, customerDataChangedEvent);
         AggregateLifecycle.apply(customerUpdatedEvent);
+        AggregateLifecycle.apply(customerDataChangedEvent);
     }
 
     @EventSourcingHandler

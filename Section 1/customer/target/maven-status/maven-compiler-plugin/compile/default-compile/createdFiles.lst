@@ -22,6 +22,7 @@ com\HBank\customer\CQRS_EventSourcing\Command\Event\CustomerCreatedEvent.class
 com\HBank\customer\CQRS_EventSourcing\Query\Handler\CustomerQueryHandler.class
 com\HBank\customer\repository\CustomerRepository.class
 com\HBank\customer\dto\ResponseDto.class
+com\HBank\customer\CQRS_EventSourcing\Command\Interceptor\CustomerCommandInterceptor.class
 com\HBank\customer\CQRS_EventSourcing\Command\DeleteCustomerCommand$DeleteCustomerCommandBuilder.class
 com\HBank\customer\entity\Customer.class
 com\HBank\customer\CQRS_EventSourcing\Command\UpdateCustomerCommand.class
