@@ -12,24 +12,26 @@
         <module name="cards" />
         <module name="loans" />
         <module name="accounts" />
+        <module name="Profile" />
         <module name="customer" />
         <module name="HBank-bom" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="common" target="21" />
+      <module name="eazy-bom" target="1.5" />
       <module name="HBank-bom" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="accounts" options="-parameters" />
-      <module name="cards" options="-parameters" />
-      <module name="common" options="-parameters" />
-      <module name="customer" options="-parameters" />
+      <module name="accounts" options="" />
+      <module name="cards" options="" />
+      <module name="common" options="" />
+      <module name="customer" options="" />
       <module name="eurekaserver" options="-parameters" />
       <module name="gatewayserver" options="-parameters" />
-      <module name="loans" options="-parameters" />
+      <module name="loans" options="" />
     </option>
   </component>
 </project>

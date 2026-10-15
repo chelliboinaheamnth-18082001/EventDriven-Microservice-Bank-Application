@@ -7,6 +7,7 @@ import com.HBank.cards.CQRS_EventSourcing.Command.UpdateCardCommand;
 import com.HBank.cards.CQRS_EventSourcing.Command.event.CardCreatedEvent;
 import com.HBank.cards.CQRS_EventSourcing.Command.event.CardDeletedEvent;
 import com.HBank.cards.CQRS_EventSourcing.Command.event.CardUpdatedEvent;
+import com.example.hbankbom.event.CardDataChangedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
@@ -33,7 +34,10 @@ public class CardAggregate {
     public CardAggregate(CreateCardCommand createCommand) {
         CardCreatedEvent cardCreatedEvent = new CardCreatedEvent();
         BeanUtils.copyProperties(createCommand, cardCreatedEvent);
-        AggregateLifecycle.apply(cardCreatedEvent);
+        CardDataChangedEvent cardDataChangedEvent = new CardDataChangedEvent();
+        BeanUtils.copyProperties(createCommand, cardDataChangedEvent);
+        AggregateLifecycle.apply(cardCreatedEvent)
+                .andThen(() -> AggregateLifecycle.apply(cardDataChangedEvent));
     }
 
     @EventSourcingHandler
@@ -51,7 +55,10 @@ public class CardAggregate {
     public void handle(UpdateCardCommand updateCommand) {
         CardUpdatedEvent cardUpdatedEvent = new CardUpdatedEvent();
         BeanUtils.copyProperties(updateCommand, cardUpdatedEvent);
+        CardDataChangedEvent cardDataChangedEvent = new CardDataChangedEvent();
+        BeanUtils.copyProperties(updateCommand, cardDataChangedEvent);
         AggregateLifecycle.apply(cardUpdatedEvent);
+        AggregateLifecycle.apply(cardDataChangedEvent);
     }
 
     @EventSourcingHandler
@@ -66,12 +73,16 @@ public class CardAggregate {
     public void handle(DeleteCardCommand deleteCommand) {
         CardDeletedEvent cardDeletedEvent = new CardDeletedEvent();
         BeanUtils.copyProperties(deleteCommand, cardDeletedEvent);
+        CardDataChangedEvent cardDataChangedEvent = new CardDataChangedEvent();
+        BeanUtils.copyProperties(deleteCommand, cardDataChangedEvent);
         AggregateLifecycle.apply(cardDeletedEvent);
+        AggregateLifecycle.apply(cardDataChangedEvent);
     }
 
     @EventSourcingHandler
     public void on(CardDeletedEvent cardDeletedEvent) {
         this.activeSw = cardDeletedEvent.isActiveSw();
+
     }
 
 }

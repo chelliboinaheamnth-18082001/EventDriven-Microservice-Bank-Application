@@ -7,10 +7,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.1.1</version>
-        <relativePath/>
+        <groupId>com.hbank</groupId>
+        <artifactId>h-bom</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../H-Bank-Bom/pom.xml</relativePath>
     </parent>
 
     <groupId>com.HBank</groupId>
@@ -75,11 +75,20 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Axon Framework with Spring Boot -->
         <dependency>
             <groupId>org.axonframework</groupId>
             <artifactId>axon-spring-boot-starter</artifactId>
             <version>4.13.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.axonframework</groupId>
+            <artifactId>axon-modelling</artifactId>
+            <version>4.13.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hbank</groupId>
+            <artifactId>common</artifactId>
         </dependency>
     </dependencies>
 
