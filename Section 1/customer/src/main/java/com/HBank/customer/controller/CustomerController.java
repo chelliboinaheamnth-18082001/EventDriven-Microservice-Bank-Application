@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import com.example.hbankbom.dto.MobileNumberUpdateDto;
 
 import java.util.UUID;
 
@@ -73,5 +74,13 @@ public class CustomerController {
                             CustomerConstants.MESSAGE_500_DELETE));
         }
     }
+
+    @PatchMapping("/mobile-number")
+    public ResponseEntity<ResponseDto> updateMobileNumber(@Valid @RequestBody MobileNumberUpdateDto mobileNumberUpdateDto) {
+        iCustomerService.updateMobileNumber(mobileNumberUpdateDto);
+        return ResponseEntity.status(org.springframework.http.HttpStatus.OK).
+                body(new ResponseDto(CustomerConstants.STATUS_200, CustomerConstants.MESSAGE_200));
+    }
+
 
 }

@@ -8,17 +8,24 @@ import com.HBank.loans.exception.ResourceNotFoundException;
 import com.HBank.loans.mapper.LoansMapper;
 import com.HBank.loans.repository.LoansRepository;
 import com.HBank.loans.service.ILoansService;
+import com.example.hbankbom.dto.MobileNumberUpdateDto;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.Optional;
 import java.util.Random;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class LoansServiceImpl implements ILoansService {
 
     private LoansRepository loansRepository;
+    private final StreamBridge streamBridge;
 
     /**
      * @param mobileNumber - Mobile Number of the Customer
@@ -88,6 +95,41 @@ public class LoansServiceImpl implements ILoansService {
         loan.setActiveSw(LoansConstants.IN_ACTIVE_SW);
         loansRepository.save(loan);
         return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateMobileNumber(MobileNumberUpdateDto mobileNumberUpdateDto) {
+        boolean result = false;
+        try {
+            String currentMobileNum = mobileNumberUpdateDto.getCurrentMobileNumber();
+            Loans loans = loansRepository.findByMobileNumberAndActiveSw(currentMobileNum,
+                    true).orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", currentMobileNum)
+            );
+            loans.setMobileNumber(mobileNumberUpdateDto.getNewMobileNumber());
+            loansRepository.save(loans);
+            updateMobileNumberStatus(mobileNumberUpdateDto);
+            throw new RuntimeException("Testing exception inside loan microservice");
+//            result = true;
+        } catch (Exception exception) {
+            log.error("Error occurred while updating mobile number", exception);
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            rollbackCardMobileNumber(mobileNumberUpdateDto);
+        }
+        return result;
+    }
+
+    private void updateMobileNumberStatus(MobileNumberUpdateDto mobileNumberUpdateDto) {
+
+        log.info("Sending updateLoanMobileNumber request for the details: {}", mobileNumberUpdateDto);
+        var result = streamBridge.send("updateLoanMobileNumber-out-0",mobileNumberUpdateDto);
+        log.info("Is the updateLoanMobileNumber request successfully triggered ? : {}", result);
+    }
+
+    private void rollbackCardMobileNumber(MobileNumberUpdateDto mobileNumberUpdateDto) {
+        log.info("Sending rollbackCardMobileNumber request for the details: {}", mobileNumberUpdateDto);
+        var result = streamBridge.send("rollbackCardMobileNumber-out-0",mobileNumberUpdateDto);
+        log.info("Is the rollbackCardMobileNumber request successfully triggered ? : {}", result);
     }
 
 

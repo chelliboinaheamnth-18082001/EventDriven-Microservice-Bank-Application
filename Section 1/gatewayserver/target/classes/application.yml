@@ -9,6 +9,8 @@ spring:
             locator:
               enabled: false
               lower-case-service-id: true   # ✅ new key format
+app:
+  base-url: "http://localhost:8072"
 
 server:
   port: 8072

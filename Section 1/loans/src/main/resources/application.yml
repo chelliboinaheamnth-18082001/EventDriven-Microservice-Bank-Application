@@ -17,6 +17,37 @@ spring:
       ddl-auto: update
     show-sql: true
 
+#  cloud:
+#    function:
+#      definition: updateLoanMobileNumber
+#    stream:
+#      defaultBinder: kafka
+#      bindings:
+#        updateLoanMobileNumber-in-0:
+#          destination: update-loan-mobile-number
+#          group: ${spring.application.name}
+#        updateMobileNumberStatus-out-0:
+#          destination: update-mobile-number-status
+
+  cloud:
+    function:
+      definition: updateLoanMobileNumber
+    stream:
+      defaultBinder: kafka
+      bindings:
+        updateLoanMobileNumber-in-0:
+          destination: update-loan-mobile-number
+          group: ${spring.application.name}
+        updateMobileNumberStatus-out-0:
+          destination: update-mobile-number-status
+        rollbackCardMobileNumber-out-0:
+          destination: rollback-card-mobile-number
+
+      kafka:
+        binder:
+          brokers: localhost:9092
+          autoCreateTopics: true
+
 eureka:
   instance:
     preferIpAddress: true

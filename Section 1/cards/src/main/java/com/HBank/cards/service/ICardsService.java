@@ -1,6 +1,7 @@
 package com.HBank.cards.service;
 
 import com.HBank.cards.dto.CardsDto;
+import com.example.hbankbom.dto.MobileNumberUpdateDto;
 
 public interface ICardsService {
 
@@ -31,4 +32,7 @@ public interface ICardsService {
      */
     boolean deleteCard(Long cardNumber);
 
+    boolean updateMobileNumber(MobileNumberUpdateDto mobileNumberUpdateDto);
+
+    boolean rollbackMobileNumber(MobileNumberUpdateDto mobileNumberUpdateDto);
 }

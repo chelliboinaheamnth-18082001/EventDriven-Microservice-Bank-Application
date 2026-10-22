@@ -2,6 +2,7 @@ package com.HBank.accounts.service;
 
 
 import com.HBank.accounts.dto.AccountsDto;
+import com.example.hbankbom.dto.MobileNumberUpdateDto;
 
 public interface IAccountsService {
 
@@ -31,6 +32,11 @@ public interface IAccountsService {
      * @return boolean indicating if the delete of Account details is successful or not
      */
     boolean deleteAccount(Long accountNumber);
+
+    boolean updateMobileNumber(MobileNumberUpdateDto mobileNumberUpdateDto);
+
+    boolean rollbackMobileNumber(MobileNumberUpdateDto mobileNumberUpdateDto);
+
 
 
 }

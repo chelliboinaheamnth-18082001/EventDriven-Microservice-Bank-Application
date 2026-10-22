@@ -1,6 +1,7 @@
 package com.HBank.loans.service;
 
 import com.HBank.loans.dto.LoansDto;
+import com.example.hbankbom.dto.MobileNumberUpdateDto;
 
 public interface ILoansService {
 
@@ -31,4 +32,5 @@ public interface ILoansService {
      */
     boolean deleteLoan(Long loanNumber);
 
+    boolean updateMobileNumber(MobileNumberUpdateDto mobileNumberUpdateDto);
 }

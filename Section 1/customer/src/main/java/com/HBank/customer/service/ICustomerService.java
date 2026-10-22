@@ -1,7 +1,7 @@
 package com.HBank.customer.service;
 
 import com.HBank.customer.dto.CustomerDto;
-
+import com.example.hbankbom.dto.MobileNumberUpdateDto;
 public interface ICustomerService {
 
     /**
@@ -26,4 +26,9 @@ public interface ICustomerService {
      * @return boolean indicating if the delete of Customer details is successful or not
      */
     boolean deleteCustomer(String customerId);
+    boolean updateMobileNumber(MobileNumberUpdateDto mobileNumberUpdateDto);
+
+
+    boolean rollbackMobileNumber(MobileNumberUpdateDto mobileNumberUpdateDto);
+
 }
